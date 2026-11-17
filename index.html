@@ -95,6 +95,10 @@
 
       <!-- Navigation & Share Buttons -->
       <div id="header-nav-actions" class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        <span id="header-timer-badge" class="hidden px-2.5 py-1.5 rounded-full text-xs font-mono font-extrabold bg-[#0e1621] text-amber-400 border border-amber-500/30">
+          60:00
+        </span>
+
         <button
           onclick="copyRoomInviteLink()"
           title="Invite friends to this exact live poll room"
@@ -104,6 +108,14 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
           </svg>
           <span class="hidden sm:inline">Invite Friend</span>
+        </button>
+
+        <button
+          onclick="openMyScorecard()"
+          id="nav-btn-my-scorecard"
+          class="hidden px-2.5 sm:px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/40 transition"
+        >
+          My Scorecard
         </button>
 
         <button
@@ -374,31 +386,39 @@
       </article>
 
       <!-- Bottom Mobile-Friendly Navigation Controls -->
-      <div class="flex items-center justify-between gap-3 pt-1">
+      <div class="flex items-center justify-between gap-2 sm:gap-3 pt-1">
         <button
           type="button"
           id="btn-poll-prev"
           onclick="navigatePoll(-1)"
-          class="flex-1 sm:flex-none px-5 py-3 rounded-xl bg-[#17212b] hover:bg-[#202b36] border border-[#232e3c] text-white font-bold text-sm transition disabled:opacity-40"
+          class="flex-1 sm:flex-none px-4 sm:px-5 py-3 rounded-xl bg-[#17212b] hover:bg-[#202b36] border border-[#232e3c] text-white font-bold text-sm transition disabled:opacity-40"
         >
           ← Previous
         </button>
 
         <button
           type="button"
-          onclick="switchView('leaderboard')"
-          class="px-4 py-3 rounded-xl bg-[#17212b] hover:bg-[#202b36] border border-[#232e3c] text-amber-400 font-bold text-xs sm:text-sm transition"
+          onclick="openMyScorecard()"
+          class="px-3.5 sm:px-4 py-3 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/40 text-emerald-300 font-bold text-xs sm:text-sm transition"
         >
-          Live Scorecard &amp; Rank
+          My Scorecard
+        </button>
+
+        <button
+          type="button"
+          onclick="switchView('leaderboard')"
+          class="px-3.5 sm:px-4 py-3 rounded-xl bg-[#17212b] hover:bg-[#202b36] border border-[#232e3c] text-amber-400 font-bold text-xs sm:text-sm transition"
+        >
+          Rankings
         </button>
 
         <button
           type="button"
           id="btn-poll-next"
           onclick="navigatePoll(1)"
-          class="flex-1 sm:flex-none px-6 py-3 rounded-xl bg-[#5288c1] hover:bg-[#467ab2] text-white font-extrabold text-sm shadow-lg transition"
+          class="flex-1 sm:flex-none px-5 sm:px-6 py-3 rounded-xl bg-[#5288c1] hover:bg-[#467ab2] text-white font-extrabold text-sm shadow-lg transition"
         >
-          Next Question →
+          Next →
         </button>
       </div>
     </section>
@@ -483,12 +503,22 @@
       <!-- Scorecard Summary Card -->
       <div class="bg-[#17212b] rounded-2xl border border-[#232e3c] overflow-hidden shadow-xl">
         <div class="bg-gradient-to-r from-[#182533] to-[#2b5278] p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#232e3c]">
-          <div>
-            <span class="text-[11px] font-extrabold uppercase tracking-widest text-sky-300">Participant Live Scorecard</span>
-            <h1 id="sc-candidate-name" class="text-2xl font-extrabold text-white mt-0.5">Participant Name</h1>
-            <p id="sc-candidate-meta" class="text-xs text-sky-200/80 mt-1">Room: UPPSC-LIVE • City: —</p>
+          <div class="flex items-center gap-3.5">
+            <div id="sc-avatar-badge" class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#0e1621]/80 border border-sky-400/40 flex items-center justify-center text-lg sm:text-xl font-extrabold text-sky-300 shrink-0 shadow">
+              UP
+            </div>
+            <div>
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="text-[11px] font-extrabold uppercase tracking-widest text-sky-300">Official UPPSC Live Scorecard</span>
+                <span id="sc-status-pill" class="px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                  Live Attempt
+                </span>
+              </div>
+              <h1 id="sc-candidate-name" class="text-xl sm:text-2xl font-extrabold text-white mt-0.5">Participant Name</h1>
+              <p id="sc-candidate-meta" class="text-xs text-sky-200/85 mt-1">Roll ID: — • Room: UPPSC-LIVE • City: —</p>
+            </div>
           </div>
-          <div class="flex items-center gap-4 bg-[#0e1621]/60 border border-white/10 rounded-xl px-4 py-3">
+          <div class="flex items-center gap-4 bg-[#0e1621]/60 border border-white/10 rounded-xl px-4 py-3 self-start sm:self-auto">
             <div class="text-center pr-4 border-r border-white/15">
               <div class="text-[10px] uppercase tracking-wider text-sky-200">Live Rank</div>
               <div id="sc-rank-badge" class="text-2xl font-extrabold text-amber-400">#1</div>
@@ -546,9 +576,10 @@
       <!-- Detailed Answered Questions Review -->
       <div class="bg-[#17212b] rounded-2xl border border-[#232e3c] p-5 space-y-4 shadow-xl">
         <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[#232e3c] pb-3">
-          <h2 class="text-base font-extrabold text-white">Response &amp; Live Poll Breakdown</h2>
+          <h2 class="text-base font-extrabold text-white">Question-by-Question Answer Breakdown (Q.1–100)</h2>
           <div class="flex flex-wrap gap-1.5">
             <button onclick="filterScorecardSolutions('ALL')" data-filter="ALL" class="sc-filter-btn px-3 py-1 rounded-lg text-xs font-bold bg-[#5288c1] text-white">All (100)</button>
+            <button onclick="filterScorecardSolutions('ATTEMPTED')" data-filter="ATTEMPTED" class="sc-filter-btn px-3 py-1 rounded-lg text-xs font-bold bg-[#0e1621] text-slate-300">Attempted</button>
             <button onclick="filterScorecardSolutions('CORRECT')" data-filter="CORRECT" class="sc-filter-btn px-3 py-1 rounded-lg text-xs font-bold bg-[#0e1621] text-slate-300">Correct</button>
             <button onclick="filterScorecardSolutions('WRONG')" data-filter="WRONG" class="sc-filter-btn px-3 py-1 rounded-lg text-xs font-bold bg-[#0e1621] text-slate-300">Wrong</button>
           </div>
@@ -2004,35 +2035,142 @@
       joined: false,
       currentView: 'entry',
       roomCode: initialRoomCode,
+      localPlayerId: `player_${crypto.randomUUID ? crypto.randomUUID().slice(0, 8) : Math.random().toString(36).slice(2, 10)}`,
+      rollNo: `UPPSC-${Math.floor(100000 + Math.random() * 900000)}`,
       candidateName: '',
       city: '',
       currentIndex: 0,
       hostSyncEnabled: false,
+      secondsRemaining: 3600,
+      timerInterval: null,
       // Local map of user's own votes { [qIndex]: optionIndex }
       myAnswers: {},
-      // All participants in this room from Firestore: [ { odId, name, city, answers: { "0": 2, ... }, updatedAt } ]
+      // All participants in this room from Firestore + local fallback
       participants: [],
       // Aggregated vote counts per question: voteMatrix[qIndex] = [opt0Count, opt1Count, opt2Count, opt3Count]
       voteMatrix: Array.from({ length: 100 }, () => [0, 0, 0, 0]),
-      selectedScorecard: null,
+      selectedScorecardId: null,
       solutionFilter: 'ALL'
     };
 
-    function showToast(msg, type = 'info') {
-      const container = document.getElementById('toast-container');
-      const el = document.createElement('div');
-      const colors = {
-        success: 'bg-emerald-600 text-white border-emerald-500',
-        error: 'bg-rose-600 text-white border-rose-500',
-        info: 'bg-[#17212b] text-white border-[#5288c1]'
+    function getActivePlayerId() {
+      return currentUser?.uid || pollState.localPlayerId;
+    }
+
+    function getInitials(name) {
+      const parts = String(name || 'UP').trim().split(/\s+/);
+      if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+      return String(name || 'UP').slice(0, 2).toUpperCase();
+    }
+
+    function buildParticipantRecord(id, rawData) {
+      const ansMap = rawData.answers || {};
+      let correct = 0;
+      let wrong = 0;
+      let answered = 0;
+      let geoCorrect = 0, geoWrong = 0;
+      let histCorrect = 0, histWrong = 0;
+
+      Object.entries(ansMap).forEach(([qIdxStr, optIdxVal]) => {
+        const qIdx = Number(qIdxStr);
+        const optIdx = Number(optIdxVal);
+        if (qIdx >= 0 && qIdx < 100 && optIdx >= 0 && optIdx <= 3) {
+          answered++;
+          if (UPPSC_QUESTIONS[qIdx].correct === optIdx) {
+            correct++;
+            if (qIdx < 50) geoCorrect++;
+            else histCorrect++;
+          } else {
+            wrong++;
+            if (qIdx < 50) geoWrong++;
+            else histWrong++;
+          }
+        }
+      });
+
+      const netScore = Number((correct * 1.33 - wrong * 0.33).toFixed(2));
+      const accuracy = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+      const name = rawData.candidateName || rawData.name || 'Participant';
+
+      return {
+        id,
+        rollNo: rawData.rollNo || `UPPSC-${String(id).slice(-6).toUpperCase()}`,
+        avatar: rawData.avatar || getInitials(name),
+        candidateName: name,
+        city: rawData.city || 'UP',
+        answers: ansMap,
+        answeredCount: answered,
+        correctCount: correct,
+        wrongCount: wrong,
+        unattemptedCount: 100 - answered,
+        accuracy,
+        netScore,
+        geoStats: {
+          attempted: geoCorrect + geoWrong,
+          correct: geoCorrect,
+          wrong: geoWrong,
+          unattempted: 50 - (geoCorrect + geoWrong),
+          score: Number((geoCorrect * 1.33 - geoWrong * 0.33).toFixed(2))
+        },
+        histStats: {
+          attempted: histCorrect + histWrong,
+          correct: histCorrect,
+          wrong: histWrong,
+          unattempted: 50 - (histCorrect + histWrong),
+          score: Number((histCorrect * 1.33 - histWrong * 0.33).toFixed(2))
+        },
+        updatedAt: rawData.updatedAt || Date.now()
       };
-      el.className = `pointer-events-auto px-4 py-3 rounded-xl shadow-xl border text-xs sm:text-sm font-semibold transition-all ${colors[type] || colors.info}`;
-      el.textContent = msg;
-      container.appendChild(el);
-      setTimeout(() => {
-        el.style.opacity = '0';
-        setTimeout(() => el.remove(), 250);
-      }, 3000);
+    }
+
+    function upsertLocalParticipantSnapshot() {
+      if (!pollState.joined) return;
+      const myId = getActivePlayerId();
+      const myRecord = buildParticipantRecord(myId, {
+        candidateName: pollState.candidateName,
+        city: pollState.city,
+        rollNo: pollState.rollNo,
+        avatar: getInitials(pollState.candidateName),
+        answers: { ...pollState.myAnswers },
+        updatedAt: Date.now()
+      });
+
+      const others = pollState.participants.filter((p) => p.id !== myId);
+      const merged = [...others, myRecord];
+      merged.sort((a, b) => {
+        if (Math.abs(b.netScore - a.netScore) > 0.001) return b.netScore - a.netScore;
+        if (b.correctCount !== a.correctCount) return b.correctCount - a.correctCount;
+        return (a.updatedAt || 0) - (b.updatedAt || 0);
+      });
+      pollState.participants = merged;
+      document.getElementById('header-participant-count').textContent = merged.length;
+    }
+
+    function startSixtyMinuteTimer() {
+      const badge = document.getElementById('header-timer-badge');
+      badge.classList.remove('hidden');
+      if (pollState.timerInterval) clearInterval(pollState.timerInterval);
+
+      const renderClock = () => {
+        const mins = Math.floor(pollState.secondsRemaining / 60);
+        const secs = pollState.secondsRemaining % 60;
+        badge.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        if (pollState.secondsRemaining <= 300) {
+          badge.classList.add('text-rose-400', 'border-rose-500/50');
+        }
+      };
+
+      renderClock();
+      pollState.timerInterval = setInterval(() => {
+        if (pollState.secondsRemaining > 0) {
+          pollState.secondsRemaining -= 1;
+          renderClock();
+        } else {
+          clearInterval(pollState.timerInterval);
+          showToast('60 Minutes completed! Opening your final scorecard.', 'info');
+          openMyScorecard();
+        }
+      }, 1000);
     }
 
     function escapeHtml(str) {
@@ -2094,70 +2232,54 @@
         (snapshot) => {
           const usersList = [];
           const matrix = Array.from({ length: 100 }, () => [0, 0, 0, 0]);
+          const myId = getActivePlayerId();
 
           snapshot.forEach((docSnap) => {
             const data = docSnap.data();
             const ansMap = data.answers || {};
 
-            // Sync current user's previously saved answers if rejoining
-            if (currentUser && docSnap.id === currentUser.uid) {
+            // Merge remote answers for current user without losing un-synced local taps
+            if (docSnap.id === myId) {
               Object.keys(ansMap).forEach((k) => {
-                pollState.myAnswers[Number(k)] = Number(ansMap[k]);
+                if (pollState.myAnswers[Number(k)] === undefined) {
+                  pollState.myAnswers[Number(k)] = Number(ansMap[k]);
+                }
               });
+              if (data.rollNo) pollState.rollNo = data.rollNo;
             }
 
-            // Tally votes per option for every question
-            let correct = 0;
-            let wrong = 0;
-            let answered = 0;
-            let geoCorrect = 0, geoWrong = 0;
-            let histCorrect = 0, histWrong = 0;
+            const effectiveAnsMap = docSnap.id === myId ? { ...ansMap, ...pollState.myAnswers } : ansMap;
 
-            Object.entries(ansMap).forEach(([qIdxStr, optIdxVal]) => {
+            Object.entries(effectiveAnsMap).forEach(([qIdxStr, optIdxVal]) => {
               const qIdx = Number(qIdxStr);
               const optIdx = Number(optIdxVal);
               if (qIdx >= 0 && qIdx < 100 && optIdx >= 0 && optIdx <= 3) {
                 matrix[qIdx][optIdx] += 1;
-                answered++;
-                if (UPPSC_QUESTIONS[qIdx].correct === optIdx) {
-                  correct++;
-                  if (qIdx < 50) geoCorrect++;
-                  else histCorrect++;
-                } else {
-                  wrong++;
-                  if (qIdx < 50) geoWrong++;
-                  else histWrong++;
-                }
               }
             });
 
-            const netScore = Number((correct * 1.33 - wrong * 0.33).toFixed(2));
-            const accuracy = answered > 0 ? Math.round((correct / answered) * 100) : 0;
-
-            usersList.push({
-              id: docSnap.id,
-              candidateName: data.candidateName || 'Participant',
-              city: data.city || '',
-              answers: ansMap,
-              answeredCount: answered,
-              correctCount: correct,
-              wrongCount: wrong,
-              unattemptedCount: 100 - answered,
-              accuracy,
-              netScore,
-              geoStats: {
-                correct: geoCorrect,
-                wrong: geoWrong,
-                score: Number((geoCorrect * 1.33 - geoWrong * 0.33).toFixed(2))
-              },
-              histStats: {
-                correct: histCorrect,
-                wrong: histWrong,
-                score: Number((histCorrect * 1.33 - histWrong * 0.33).toFixed(2))
-              },
-              updatedAt: data.updatedAt || 0
-            });
+            usersList.push(buildParticipantRecord(docSnap.id, { ...data, answers: effectiveAnsMap }));
           });
+
+          // Ensure local user is always present in participants list even before first network roundtrip
+          if (pollState.joined && !usersList.some((u) => u.id === myId)) {
+            Object.entries(pollState.myAnswers).forEach(([qIdxStr, optIdxVal]) => {
+              const qIdx = Number(qIdxStr);
+              const optIdx = Number(optIdxVal);
+              if (qIdx >= 0 && qIdx < 100 && optIdx >= 0 && optIdx <= 3) {
+                matrix[qIdx][optIdx] += 1;
+              }
+            });
+            usersList.push(
+              buildParticipantRecord(myId, {
+                candidateName: pollState.candidateName,
+                city: pollState.city,
+                rollNo: pollState.rollNo,
+                answers: { ...pollState.myAnswers },
+                updatedAt: Date.now()
+              })
+            );
+          }
 
           // Rank participants by Net Score descending, then Correct count, then earliest timestamp
           usersList.sort((a, b) => {
@@ -2177,9 +2299,8 @@
             refreshPollGridDrawer();
           } else if (pollState.currentView === 'leaderboard') {
             renderLeaderboardTable();
-          } else if (pollState.currentView === 'scorecard' && pollState.selectedScorecard) {
-            const refreshed = usersList.find((u) => u.id === pollState.selectedScorecard.id);
-            if (refreshed) openParticipantScorecard(refreshed);
+          } else if (pollState.currentView === 'scorecard' && pollState.selectedScorecardId) {
+            renderScorecardView(pollState.selectedScorecardId);
           }
         },
         (err) => {
@@ -2241,8 +2362,10 @@
       });
 
       const pollBtn = document.getElementById('nav-btn-poll');
+      const myScBtn = document.getElementById('nav-btn-my-scorecard');
       const lbBtn = document.getElementById('nav-btn-leaderboard');
       pollBtn.classList.toggle('hidden', !pollState.joined);
+      myScBtn.classList.toggle('hidden', !pollState.joined);
 
       if (viewName === 'poll') {
         pollBtn.className = 'px-3 py-1.5 rounded-full text-xs font-bold bg-[#5288c1] text-white transition';
@@ -2293,13 +2416,16 @@
         subscribeToRoomData(roomCode);
       }
 
+      upsertLocalParticipantSnapshot();
       buildPollGridDrawer();
+      startSixtyMinuteTimer();
       await syncMyVotesToFirestore();
       switchView('poll');
       showToast(`Joined Room ${roomCode} as ${name}!`, 'success');
     });
 
     async function syncMyVotesToFirestore() {
+      upsertLocalParticipantSnapshot();
       if (!db || !currentUser || !pollState.joined) return;
       const myDocRef = doc(db, 'artifacts', appId, 'public', 'data', `uppsc_poll_${pollState.roomCode}`, currentUser.uid);
       try {
@@ -2308,6 +2434,8 @@
           {
             candidateName: pollState.candidateName,
             city: pollState.city,
+            rollNo: pollState.rollNo,
+            avatar: getInitials(pollState.candidateName),
             answers: pollState.myAnswers,
             updatedAt: Date.now()
           },
@@ -2581,7 +2709,7 @@
       top5.forEach((p, idx) => {
         const row = document.createElement('button');
         row.type = 'button';
-        row.onclick = () => openParticipantScorecard(p);
+        row.onclick = () => openScorecardById(p.id);
         row.className = 'w-full flex items-center justify-between p-2.5 rounded-xl bg-[#0e1621] hover:bg-[#1e2c3a] border border-[#232e3c] text-left transition';
         row.innerHTML = `
           <div class="flex items-center gap-2.5 min-w-0">
@@ -2595,7 +2723,7 @@
           </div>
           <div class="text-right shrink-0">
             <div class="text-xs font-extrabold text-emerald-400">${Number(p.netScore).toFixed(2)}</div>
-            <div class="text-[10px] text-[#7f91a4]">pts</div>
+            <div class="text-[10px] text-[#7f91a4]">Scorecard →</div>
           </div>
         `;
         box.appendChild(row);
@@ -2607,6 +2735,7 @@
       const tbody = document.getElementById('lb-table-body');
       podium.innerHTML = '';
       tbody.innerHTML = '';
+      const myId = getActivePlayerId();
 
       if (pollState.participants.length === 0) {
         podium.innerHTML = `
@@ -2627,6 +2756,7 @@
       badges.forEach((b, idx) => {
         const p = pollState.participants[idx];
         if (!p) return;
+        const isMe = p.id === myId;
         const card = document.createElement('div');
         card.className = `bg-[#17212b] rounded-2xl border ${b.border} p-4 flex flex-col justify-between shadow-lg`;
         card.innerHTML = `
@@ -2635,13 +2765,22 @@
               <span class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold ${b.pill}">${b.label}</span>
               <span class="text-[11px] text-[#7f91a4]">${p.answeredCount}/100 Qs</span>
             </div>
-            <h3 class="text-base font-extrabold text-white truncate">${escapeHtml(p.candidateName)}</h3>
-            <p class="text-[11px] text-[#7f91a4]">${escapeHtml(p.city || 'UP')} • ${p.accuracy}% accuracy</p>
+            <div class="flex items-center gap-2.5 mt-1">
+              <span class="w-9 h-9 rounded-xl bg-[#0e1621] border border-[#2b3948] flex items-center justify-center text-xs font-extrabold text-sky-300 shrink-0">
+                ${escapeHtml(p.avatar)}
+              </span>
+              <div class="min-w-0">
+                <h3 class="text-base font-extrabold text-white truncate">
+                  ${escapeHtml(p.candidateName)} ${isMe ? '<span class="text-[10px] px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-300 ml-1">YOU</span>' : ''}
+                </h3>
+                <p class="text-[11px] text-[#7f91a4] truncate">${escapeHtml(p.city || 'UP')} • ${p.accuracy}% accuracy</p>
+              </div>
+            </div>
           </div>
           <div class="mt-3 pt-2.5 border-t border-[#232e3c] flex items-center justify-between">
             <span class="text-lg font-extrabold text-emerald-400">${Number(p.netScore).toFixed(2)} <span class="text-[11px] font-normal text-[#7f91a4]">pts</span></span>
-            <button onclick="openScorecardByIndex(${idx})" class="px-3 py-1 rounded-lg bg-[#2b5278] hover:bg-[#356391] text-white text-xs font-bold">
-              Scorecard
+            <button type="button" onclick="openScorecardById('${escapeHtml(p.id)}')" class="px-3 py-1.5 rounded-lg bg-[#2b5278] hover:bg-[#356391] text-white text-xs font-bold transition">
+              View Scorecard
             </button>
           </div>
         `;
@@ -2649,13 +2788,24 @@
       });
 
       pollState.participants.forEach((p, idx) => {
+        const isMe = p.id === myId;
         const tr = document.createElement('tr');
-        tr.className = 'hover:bg-[#1e2b38] transition-colors';
+        tr.className = `hover:bg-[#1e2b38] transition-colors ${isMe ? 'bg-[#1a2938]/70' : ''}`;
         tr.innerHTML = `
           <td class="py-3.5 px-4 font-extrabold text-amber-400">#${idx + 1}</td>
           <td class="py-3.5 px-4">
-            <div class="font-bold text-white">${escapeHtml(p.candidateName)}</div>
-            <div class="text-[11px] text-[#7f91a4]">${escapeHtml(p.city || 'India')}</div>
+            <div class="flex items-center gap-2.5">
+              <span class="w-8 h-8 rounded-lg bg-[#0e1621] border border-[#2b3948] flex items-center justify-center text-xs font-extrabold text-sky-300 shrink-0">
+                ${escapeHtml(p.avatar)}
+              </span>
+              <div>
+                <div class="font-bold text-white flex items-center gap-1.5">
+                  <span>${escapeHtml(p.candidateName)}</span>
+                  ${isMe ? '<span class="px-1.5 py-0.2 rounded bg-sky-500/20 text-sky-300 text-[10px] font-extrabold">YOU</span>' : ''}
+                </div>
+                <div class="text-[11px] text-[#7f91a4]">${escapeHtml(p.rollNo)} • ${escapeHtml(p.city || 'India')}</div>
+              </div>
+            </div>
           </td>
           <td class="py-3.5 px-4 text-center text-slate-300 font-semibold">${p.answeredCount}/100</td>
           <td class="py-3.5 px-4 text-center font-bold text-emerald-400">${p.correctCount}</td>
@@ -2663,13 +2813,160 @@
           <td class="py-3.5 px-4 text-center text-slate-300 font-semibold">${p.accuracy}%</td>
           <td class="py-3.5 px-4 text-right font-extrabold text-sky-300 text-base">${Number(p.netScore).toFixed(2)}</td>
           <td class="py-3.5 px-4 text-right">
-            <button onclick="openScorecardByIndex(${idx})" class="px-3 py-1.5 rounded-lg bg-[#5288c1] hover:bg-[#467ab2] text-white text-xs font-bold">
-              View
+            <button type="button" onclick="openScorecardById('${escapeHtml(p.id)}')" class="px-3 py-1.5 rounded-lg bg-[#5288c1] hover:bg-[#467ab2] text-white text-xs font-bold whitespace-nowrap shadow">
+              View Scorecard
             </button>
           </td>
         `;
         tbody.appendChild(tr);
       });
+    };
+
+    window.openMyScorecard = function () {
+      upsertLocalParticipantSnapshot();
+      openScorecardById(getActivePlayerId());
+    };
+
+    window.openScorecardById = function (playerId) {
+      let target = pollState.participants.find((u) => u.id === playerId);
+      if (!target && playerId === getActivePlayerId() && pollState.joined) {
+        upsertLocalParticipantSnapshot();
+        target = pollState.participants.find((u) => u.id === playerId);
+      }
+      if (!target) {
+        showToast('Participant scorecard not found yet.', 'error');
+        return;
+      }
+      pollState.selectedScorecardId = target.id;
+      pollState.solutionFilter = 'ALL';
+      switchView('scorecard');
+      renderScorecardView(target.id);
+    };
+
+    function renderScorecardView(playerId) {
+      const rankIdx = pollState.participants.findIndex((u) => u.id === playerId);
+      const p = rankIdx >= 0 ? pollState.participants[rankIdx] : null;
+      if (!p) return;
+
+      const displayRank = rankIdx + 1;
+      const isCompleted = p.answeredCount >= 100 || pollState.secondsRemaining <= 0;
+
+      document.getElementById('sc-avatar-badge').textContent = p.avatar || getInitials(p.candidateName);
+      document.getElementById('sc-status-pill').textContent = isCompleted ? 'Completed' : 'Live Attempt';
+      document.getElementById('sc-candidate-name').textContent = p.candidateName;
+      document.getElementById('sc-candidate-meta').textContent = `Roll ID: ${p.rollNo} • Room: ${pollState.roomCode} • City: ${p.city || 'UP'}`;
+      document.getElementById('sc-rank-badge').textContent = `#${displayRank}`;
+      document.getElementById('sc-net-score').textContent = Number(p.netScore).toFixed(2);
+
+      document.getElementById('sc-attempted').textContent = `${p.answeredCount} / 100`;
+      document.getElementById('sc-correct').textContent = p.correctCount;
+      document.getElementById('sc-wrong').textContent = p.wrongCount;
+      document.getElementById('sc-unattempted').textContent = p.unattemptedCount;
+      document.getElementById('sc-accuracy').textContent = `${p.accuracy}%`;
+
+      const geo = p.geoStats || { attempted: 0, correct: 0, wrong: 0, unattempted: 50, score: 0 };
+      const hist = p.histStats || { attempted: 0, correct: 0, wrong: 0, unattempted: 50, score: 0 };
+
+      document.getElementById('sc-section-tbody').innerHTML = `
+        <tr>
+          <td class="py-3 px-4 font-bold text-white">Section I: Indian Geography &amp; Environment (50 Qs)</td>
+          <td class="py-3 px-4 text-center text-slate-300">${geo.attempted} / 50</td>
+          <td class="py-3 px-4 text-center font-bold text-emerald-400">${geo.correct}</td>
+          <td class="py-3 px-4 text-center font-bold text-rose-400">${geo.wrong}</td>
+          <td class="py-3 px-4 text-right font-extrabold text-sky-300">${Number(geo.score).toFixed(2)}</td>
+        </tr>
+        <tr>
+          <td class="py-3 px-4 font-bold text-white">Section II: Modern History of India 1498–1947 (50 Qs)</td>
+          <td class="py-3 px-4 text-center text-slate-300">${hist.attempted} / 50</td>
+          <td class="py-3 px-4 text-center font-bold text-emerald-400">${hist.correct}</td>
+          <td class="py-3 px-4 text-center font-bold text-rose-400">${hist.wrong}</td>
+          <td class="py-3 px-4 text-right font-extrabold text-sky-300">${Number(hist.score).toFixed(2)}</td>
+        </tr>
+      `;
+
+      filterScorecardSolutions(pollState.solutionFilter || 'ALL');
+    }
+
+    window.filterScorecardSolutions = function (filterType) {
+      pollState.solutionFilter = filterType;
+      document.querySelectorAll('.sc-filter-btn').forEach((btn) => {
+        const active = btn.dataset.filter === filterType;
+        btn.className = active
+          ? 'sc-filter-btn px-3 py-1 rounded-lg text-xs font-bold bg-[#5288c1] text-white'
+          : 'sc-filter-btn px-3 py-1 rounded-lg text-xs font-bold bg-[#0e1621] text-slate-300';
+      });
+
+      const p = pollState.participants.find((u) => u.id === pollState.selectedScorecardId);
+      if (!p) return;
+      const ansMap = p.answers || {};
+      const listEl = document.getElementById('sc-solutions-list');
+      listEl.innerHTML = '';
+      const letters = ['A', 'B', 'C', 'D'];
+      let renderedCount = 0;
+
+      UPPSC_QUESTIONS.forEach((q, idx) => {
+        const rawAns = ansMap[idx] !== undefined ? ansMap[idx] : ansMap[String(idx)];
+        const hasAns = rawAns !== undefined && rawAns !== null;
+        const userAns = hasAns ? Number(rawAns) : -1;
+        const isCorrect = hasAns && userAns === q.correct;
+        const isWrong = hasAns && userAns !== q.correct;
+
+        if (filterType === 'ATTEMPTED' && !hasAns) return;
+        if (filterType === 'CORRECT' && !isCorrect) return;
+        if (filterType === 'WRONG' && !isWrong) return;
+
+        renderedCount++;
+        const counts = pollState.voteMatrix[idx] || [0, 0, 0, 0];
+        const totalVotes = counts.reduce((s, c) => s + c, 0);
+
+        const badge = isCorrect
+          ? `<span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[11px] font-bold">✓ Selected (${letters[userAns]}) • +1.33</span>`
+          : isWrong
+          ? `<span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 text-[11px] font-bold">✕ Selected (${letters[userAns]}) • Correct (${letters[q.correct]}) • -0.33</span>`
+          : `<span class="px-2 py-0.5 rounded bg-slate-700 text-slate-300 text-[11px] font-bold">Skipped (0) • Correct (${letters[q.correct]})</span>`;
+
+        const card = document.createElement('div');
+        card.className = 'p-4 rounded-xl bg-[#0e1621] border border-[#232e3c] space-y-2.5';
+        card.innerHTML = `
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="text-xs font-extrabold text-[#6ab2f2]">Q.${q.id} • ${escapeHtml(q.section)} (${escapeHtml(q.topic)})</span>
+            ${badge}
+          </div>
+          <p class="text-xs sm:text-sm font-semibold text-white whitespace-pre-line">${escapeHtml(q.question)}</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+            ${q.options
+              .map((opt, oIdx) => {
+                const vCount = counts[oIdx] || 0;
+                const vPct = totalVotes > 0 ? Math.round((vCount / totalVotes) * 100) : 0;
+                let cls = 'bg-[#17212b] border-[#232e3c] text-slate-300';
+                let tag = '';
+                if (oIdx === q.correct && oIdx === userAns) {
+                  cls = 'bg-emerald-950/60 border-emerald-500 text-emerald-200 font-bold';
+                  tag = ` • ${escapeHtml(p.candidateName)}'s Pick ✓`;
+                } else if (oIdx === q.correct) {
+                  cls = 'bg-emerald-950/45 border-emerald-500/70 text-emerald-200 font-bold';
+                  tag = ' • Correct';
+                } else if (oIdx === userAns && isWrong) {
+                  cls = 'bg-rose-950/60 border-rose-500 text-rose-200 font-bold';
+                  tag = ` • ${escapeHtml(p.candidateName)}'s Pick ✕`;
+                }
+                return `<div class="p-2.5 rounded-lg border ${cls} flex justify-between gap-2">
+                  <span><strong>(${letters[oIdx]})</strong> ${escapeHtml(opt)}<span class="text-[10px] opacity-90">${tag}</span></span>
+                  <span class="text-[11px] text-[#7f91a4] shrink-0">${vCount} (${vPct}%)</span>
+                </div>`;
+              })
+              .join('')}
+          </div>
+          <div class="p-3 rounded-lg bg-[#17212b] border border-[#2b5278]/50 text-xs text-slate-300 leading-relaxed">
+            <span class="font-bold text-sky-300">💡 UPPSC Note:</span> ${escapeHtml(q.explanation)}
+          </div>
+        `;
+        listEl.appendChild(card);
+      });
+
+      if (renderedCount === 0) {
+        listEl.innerHTML = `<div class="text-center py-8 text-xs text-[#7f91a4] bg-[#0e1621] rounded-xl border border-dashed border-[#232e3c]">No questions match this filter yet.</div>`;
+      }
     };
 
     window.openScorecardByIndex = function (idx) {
